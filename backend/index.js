@@ -55,6 +55,9 @@ app.get('/books/:id', async (request, response) => {
     try{
         const {id} = request.params;
         const book = await Book.findById(id)
+        if ( !book ) {
+            return response.status(404).json( { message:'Book does not exist' } )
+        }
         return response.status(200).json(book)
 
     } catch (error) {
@@ -69,7 +72,7 @@ app.put('/books/:id', async (request, response) => {
         const {id} = request.params;
         const book = await Book.findById(id)
         if ( !book ) {
-            return response.status(404).json( { message:'Boook does not exist' } )
+            return response.status(404).json( { message:'Book does not exist' } )
         }
 
         if ( !request.body.title ) {
@@ -82,6 +85,12 @@ app.put('/books/:id', async (request, response) => {
             request.body.publishedYear = book.publishedYear
         }
         const result = await Book.findByIdAndUpdate(id, request.body)
+
+        if ( !result ) {
+            return response.status(404).json( { message:'Error while updating the book' } )
+
+        }
+
         const updatedBook = await Book.findById(id)
         return response.status(200).json({
             message: 'Book Updated Successfully',
@@ -90,11 +99,25 @@ app.put('/books/:id', async (request, response) => {
 
     } catch (error) {
         console.log(error.message)
-        response.status(500).send({message: error.message})
+        response.status(500).send({message: error.message, catch:"catch"})
     }
 })
 
+//Delete a book
+app.delete('/books/:id', async (request, response) => {
+    try{
+        const {id} = request.params;
+        const deletedBook = await Book.findByIdAndDelete(id)
+        if ( !deletedBook ) {
+            return response.status(404).json( { message:'Book does not exist' } )
+        }
+        return response.status(200).json({message:'Book Deleted Successfuly'})
 
+    } catch (error) {
+        console.log(error.message)
+        response.status(500).send({message: error.message})
+    }
+})
 
 
 mongoose
