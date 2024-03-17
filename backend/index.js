@@ -51,7 +51,7 @@ app.get('/books', async (request, response) => {
 })
 
 //Get Selected book
-app.put('/books/:id', async (request, response) => {
+app.get('/books/:id', async (request, response) => {
     try{
         const {id} = request.params;
         const book = await Book.findById(id)
@@ -64,7 +64,7 @@ app.put('/books/:id', async (request, response) => {
 })
 
 //Update a book
-app.get('/books/:id', async (request, response) => {
+app.put('/books/:id', async (request, response) => {
     try{
         const {id} = request.params;
         const book = await Book.findById(id)
