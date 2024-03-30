@@ -22,6 +22,9 @@ const RemoveBook = () => {
         console.log(error);
       });
   };
+  const cancelRemove = () => {
+    navigate("/");
+  };
   return (
     <div className="p-4">
       <BackButtton />
@@ -40,7 +43,7 @@ const RemoveBook = () => {
           </button>
           <button
             className="p-4 bg-green-600 text-white m-8 w-full w-[150px]"
-            onClick={navigate("/")}
+            onClick={cancelRemove}
           >
             No
           </button>
