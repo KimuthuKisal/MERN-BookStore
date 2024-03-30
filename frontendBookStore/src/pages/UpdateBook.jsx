@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Spinner from "../components/Spinner";
 import BackButtton from "../components/BackButtton";
+import { useSnackbar } from "notistack";
 
 const UpdateBook = () => {
   const [title, setTitle] = useState("");
@@ -11,6 +12,7 @@ const UpdateBook = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   useEffect(() => {
     setLoading(true);
     axios
@@ -23,10 +25,12 @@ const UpdateBook = () => {
       })
       .catch((error) => {
         setLoading(false);
-        alert(
-          "Sorry! An error occured while loading previous details of the book..."
-        );
-        console.log(error);
+        enqueueSnackbar("Sorry! An error occured while loading the book...", {
+            variant: "error",
+          });
+          setTimeout(() => {
+            closeSnackbar();
+          }, 3000);console.log(error);
       });
   }, []);
   const updateBook = () => {
@@ -40,11 +44,20 @@ const UpdateBook = () => {
       .put(`http://localhost:5555/books/${id}`, data)
       .then(() => {
         setLoading(false);
+        enqueueSnackbar("Book Updated Successfully...", { variant: "success" });
+        setTimeout(() => {
+          closeSnackbar();
+        }, 3000);
         navigate("/");
       })
       .catch((error) => {
         setLoading(false);
-        alert("Sorry! An error occured while updating details of the book...");
+        enqueueSnackbar("Sorry! An error occured while updating the book...", {
+          variant: "error",
+        });
+        setTimeout(() => {
+          closeSnackbar();
+        }, 3000);
         console.log(error);
       });
   };
